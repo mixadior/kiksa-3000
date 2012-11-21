@@ -90,12 +90,16 @@ function bot:update(dt, map)
     local angle_ch = false
     local angle_diff = 0
 
-    if (self.timings.rotate > 0.8 or self.timings.rotate == 0) then
+    local rotate_timing = 0.05
+    if (activated_speed_pc) then
+        rotate_timing = 0.8
+    end
+    if (self.timings.rotate > rotate_timing or self.timings.rotate == 0) then
         angle_ch = true
-        angle_diff = utils.rounder(dt * 30 * (self.mimeOne), 3);
+        angle_diff = utils.rounder(dt * 10 * (self.mimeOne), 3);
         local angle = self.angle + angle_diff
-        if (angle > 360) then
-            --angle = angle - 360
+        if (math.abs(angle) > 360) then
+            angle = angle - (360 * self.mimeOne)
         end
         self.angleBackup = self.angle
         self.angle = angle;
@@ -172,57 +176,61 @@ function bot:update(dt, map)
                 v:move(nn.x, nn.y)
             end
         );
+        if (activated_speed_pc) then
+            if (self.cachedByAngle.mmp == nil or angle_diff > 0) then
+                        self.cachedByAngle.mmp =  self.borderMM:clone():map_to_vertex(function(v)
+                            v:rotate(angle, rv)
+                        end)
+            end
+            local mmP = self.cachedByAngle.mmp:clone():map_to_vertex(
+                        function (v)
+                            v:move(nn.x, nn.y)
+                        end
+                    );
 
-        if (self.cachedByAngle.mmp == nil or angle_diff > 0) then
-                    self.cachedByAngle.mmp =  self.borderMM:clone():map_to_vertex(function(v)
-                        v:rotate(angle, rv)
-                    end)
-        end
-        local mmP = self.cachedByAngle.mmp:clone():map_to_vertex(
-                    function (v)
-                        v:move(nn.x, nn.y)
-                    end
-                );
-
-        self.mmp = mmP
-        --print_r(mmP.vertices)
-        local outOfMap = false
-        local allowRotate = false
-        if (self.cnt3 > 15) then
-            allowRotate = true
-        end
-
-            for i=1,#mmP.vertices,1 do
-
-                if (not map:is_inside(mmP.vertices[i])) then
-                    if (not allowRotate) then
-                        self.state = "change"
-                        self.excludeShakerChoice = self.shakerChoice
-                    end
-                    outOfMap = true
-
-                    self.cnt3 = self.cnt3 + 1
-                    break;
-
-
-                end
+            self.mmp = mmP
+            --print_r(mmP.vertices)
+            local outOfMap = false
+            local allowRotate = false
+            if (self.cnt3 > 15) then
+                allowRotate = true
             end
 
-        if (not outOfMap) then
+                for i=1,#mmP.vertices,1 do
 
+                    if (not map:is_inside(mmP.vertices[i])) then
+                        if (not allowRotate) then
+                            self.state = "change"
+                            self.excludeShakerChoice = self.shakerChoice
+                        end
+                        outOfMap = true
+
+                        self.cnt3 = self.cnt3 + 1
+                        break;
+
+
+                    end
+                end
+
+            if (not outOfMap) then
+
+                self.nullNullReal = nullNullReal
+                self.botPolygon = botPolygon
+                self.cnt3 = 0
+            else
+                 if (not allowRotate) then
+
+                    self.angle = self.angleBackup
+                 else
+                     self.botPolygon = botPolygon
+                 end
+            end
+        else
+            --self.angle = self.angleBackup
             self.nullNullReal = nullNullReal
             self.botPolygon = botPolygon
-            self.cnt3 = 0
-        else
-             if (not allowRotate) then
-
-                self.angle = self.angleBackup
-             else
-                 self.botPolygon = botPolygon
-             end
         end
     end
-
     self:increment_timings(dt);
 end
 

@@ -1,4 +1,4 @@
-
+activated_speed_pc = true;
 
 function print_r (t, indent, done)
   done = done or {}
@@ -129,7 +129,17 @@ function love.keypressed(key)
         hrumalka.go.youare:fire()
     end
     if (key == 'r') then
-        hrumalka:start_level(1)
+        hrumalka:start_level(2)
+       --hrumalka:restart_level()
+    end
+    if (key == 'h') then
+        activated_speed_pc = not activated_speed_pc;
+        local status = 'Centroid'
+        if (activated_speed_pc) then
+            status = 'Border'
+        end
+        osd_settings:add({text = '', header = 'Collision: '..status, update = function(self, dt, osd)  self.timer = (self.timer or 0) + dt * 10 if(self.timer > 10) then hrumalka:restart_level(); osd:close() end  end})
+
     end
     if (key == 'o') then
         ssfx:toggle()

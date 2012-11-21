@@ -83,7 +83,7 @@ function replicator_bot:draw()
         else
             love.graphics.setColor(self.color[1], self.color[2], self.color[3], 50);
         end
-        love.graphics.polygon('line', self.mmp:xy());
+        --love.graphics.polygon('line', self.mmp:xy());
         love.graphics.polygon('line', self.botPolygon:xy());
 
         if (not self.dead) then

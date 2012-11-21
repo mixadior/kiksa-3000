@@ -71,7 +71,8 @@ function level2:new(game, ...)
     }
 
     local bb = replicator_bot:new({ {1,2,60}, {2,3,4} , {4,5,6} , {6,7,8}, {8,9,10}, {10,11,12}, {12,13,14}, {14,15,16}, {16,17,18}, {18,19,20}, {20,21,22}, {22,23,24}, {24,25,26} , {26,27,28}, {28,29,30}, {30,31,32}, {33, 34,35}, {35,36,37}, {37,38,39} , {39,40,41}, {41,42,43}, {2, 24, 28, 44}}, vertex:new(500, 200), 80, 40, 5, polygon:new(vtxs), 10)
-    bb.distance_to_change_direction = 20
+
+    --bb.distance_to_change_direction = 20
     local bots = {
         bb
 
@@ -92,12 +93,38 @@ function level2:new(game, ...)
 end
 
 function level2:update(...)
+    if (self.completed == 3) then
+           return 'completed'
+    end
     local dt, g = ...
     if (self.watch_for_bot.dead and not self.rewarded.freezer) then
         g.go.youare.skills.weapon = true
         g.go.youare.skills.freezer = true
         self.rewarded.freezer = true
         g:give_skill(skill_turbo:new(5000))
+        osdd:add({text = 'За смелое решение вы награждаетесь 5000 еденицами ускорения и новым умением - Заморозка. Стрельбы заморозкой - кнопка X (икс). Пуля парализует врага на 5 секунд. \n\n [ Нажмите Esc для закрытия сообщения ]', header = 'За смелость', before = function(self, v)  end, close = function(self, v) print('shit'..v.state) end})
+
+    end
+
+    local dt, g = ...
+    local all_dead = true
+    g.go.bots:call_for_all(function(i, b)
+        if (not b.dead) then
+            all_dead = false
+        end
+    end)
+
+    if (all_dead) then
+
+        g.restore.youare = deepcopy(g.go.youare)
+        g.restore.frags = g.go.gamestats.frags
+
+        local l = self
+        l.completed = 3
+
+        return false
+    else
+        return false
     end
     return false
 end

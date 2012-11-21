@@ -81,7 +81,7 @@ function osd:draw()
         love.graphics.printf( header, osd_x, osd_y, w, "center")
 
         love.graphics.setFont(hs)
-        love.graphics.printf( text, osd_x, osd_y + 10 + header_h, w, "left")
+        love.graphics.printf( text, osd_x, osd_y + 10 + header_h, w, "center")
 
 
 

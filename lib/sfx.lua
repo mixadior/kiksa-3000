@@ -7,6 +7,7 @@ function sfx:init()
     o.monsterkill= love.audio.newSource("resources/sounds/ut/monsterkill.wav", "static")
     o.holyshit = love.audio.newSource("resources/sounds/ut/holyshit.wav", "static")
     o.headshot = love.audio.newSource("resources/sounds/ut/headshot.wav", "static")
+    o.finishMusic = love.audio.newSource("resources/music/dg_hood_xlarge.ogg", "stream")
     o.sfx_enabled = true
     setmetatable(o, self)
     self.__index = self
@@ -21,6 +22,11 @@ function sfx:play(sound)
 end
 
 function sfx:toggle()
+    if (self.sfx_enabled) then
+        love.audio.pause();
+    else
+        love.audio.resume();
+    end
     self.sfx_enabled = not self.sfx_enabled
 end
 

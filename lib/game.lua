@@ -52,11 +52,23 @@ function game:start_level(level)
     self.level = _G['level'..level]:new(self)
 end
 
+function game:restart_level()
+    self:start_level(self.level.name);
+end
+
 function game:update(dt)
     local r = self.level:update(dt, self)
     if (r == 'completed') then
-        if (self.level.name >= 1 and self.level.name < 3) then
+        if (self.level.name >= 1 and self.level.name < 2) then
             self:start_level(self.level.name + 1)
+        else
+            if (self.finish == nil) then
+                self.finish = true;
+
+                osdd:close_all();
+                osdd:add({ text = 'Вы прошли 2 демо уровня. \n Спасибо за то что вы играли в мою игру. \n Жду вас на новых уровнях в новый билдах. \n\n\n [Нажмите Esc для продолжения] ', close = function() ssfx:play('finishMusic'); end, header = 'Поздравляю'})
+
+            end
         end
     end
 end
