@@ -129,8 +129,8 @@ function love.keypressed(key)
         hrumalka.go.youare:fire()
     end
     if (key == 'r') then
-        hrumalka:start_level(2)
-       --hrumalka:restart_level()
+        --hrumalka:start_level(2)
+       hrumalka:restart_level()
     end
     if (key == 'h') then
         activated_speed_pc = not activated_speed_pc;
