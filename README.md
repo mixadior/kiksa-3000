@@ -10,3 +10,5 @@ kiksa-3000
 разработке. 
 
 Собраные билды под linux, windows, macosx брать здесь - http://feodosian.com/static/prod_build/vsync_off/
+
+![Kiksa 3000 screenshot](http://ggg.org.ua/kiksa1.png)
